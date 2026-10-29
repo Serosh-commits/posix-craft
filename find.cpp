@@ -25,7 +25,7 @@ static inline void find_file(std::string dir, std::string file){
 int main(int argc, char *argv[]){
 
     if(argc != 3){
-        std::cerr<<"Usage : <input directory path> <input file u want to find>\n";
+        std::cerr<<"Usage :find  <input directory path> <input file u want to find>\n";
         return EXIT_SUCCESS;
     }
     
