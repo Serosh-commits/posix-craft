@@ -28,7 +28,7 @@ int main(int argc, char *argv[]){
     }
     
     if(argc - arg_index != 2){
-        std::cerr<<"Usage : ./grep [-n] [v] <pattern> <input file name>\n";
+        std::cerr<<"Usage : ./grep [-n] [-r] <pattern> <input file name>\n";
         return EXIT_FAILURE;
     }
 
@@ -41,11 +41,20 @@ int main(int argc, char *argv[]){
     }
 
     std::string line;
+    int line_number = 0;
     while(std::getline(file, line)) {
+        ++line_number;
         
-        if(line.find(pattern) != std::string::npos){
+        bool found = line.find(pattern) != std::string::npos;
+
+        if(!(invert_match && found) || (invert_match && !found )){
+            
+            if(show_line_numbers){
+                std::cout<<"line_number :";
+            }
+
             std::cout<< line <<"\n";
-        }
+2        }
     }
     return EXIT_SUCCESS;
 }
