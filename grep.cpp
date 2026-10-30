@@ -7,17 +7,17 @@
 #include<array>
 #include<cctype>
 #include<string_view>
-
+#include<vector>
+#include<cstdint>
 class bmh{
     private:
         std::string_view pat_;
         bool ci_;
         std::array<int ,256>skip_;
     public:
-        bmh(std::string_view pat, bool case_insens){
-            pat_ = pat;
-            ci_ = case_insens;
-
+        static constexpr size_t npos = SIZE_MAX;
+        bmh(std::string_view pat, bool case_insens) : pat_(pat), ci_(case_insens)
+        {
             skip_.fill(static_cast<int>(pat_.size()));
             const int m = static_cast<int>(pat_.size());
             for(int it = 0;it < m-1; ++it){
@@ -27,6 +27,48 @@ class bmh{
 
                 skip_[c] = m - it - 1; 
             }
+        }
+        
+        size_t find(const char* text, size_t n) const{
+            
+            size_t m = pat_.size();
+            if(m == 0){
+                return 0;
+            }
+            
+            if(n < m){
+                return npos;
+            }
+            size_t pos = m-1;
+
+            while(pos < n){
+                int j = static_cast<int>(m) - 1;
+                size_t k = pos;
+                
+                while(j >= 0){
+                    unsigned char tc = text[k];
+                    unsigned char pc = pat_[j];
+
+                    if(ci_){
+                        tc = std::tolower(tc);
+                    }
+                    if(tc != pc){
+                        break;
+                    }
+                    --j;
+                    --k;
+                }
+                // all chars matched
+                if(j < 0){
+                    return k + 1;
+                }
+                
+                unsigned char shift_char = text[pos];
+                if (ci_) shift_char = std::tolower(shift_char);
+                pos += skip_[shift_char];
+            }
+
+            return npos;
         }
 };
 std::string to_lower_case(std::string text){
