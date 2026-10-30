@@ -4,8 +4,31 @@
 #include<vector>
 #include<cstdlib>
 #include<fstream>
+#include<array>
+#include<cctype>
+#include<string_view>
 
-namespace fs = std::filesystem;
+class bmh{
+    private:
+        std::string_view pat_;
+        bool ci_;
+        std::array<int ,256>skip_;
+    public:
+        bmh(std::string_view pat, bool case_insens){
+            pat_ = pat;
+            ci_ = case_insens;
+
+            skip_.fill(static_cast<int>(pat_.size()));
+            const int m = static_cast<int>(pat_.size());
+            for(int it = 0;it < m-1; ++it){
+                unsigned char c = static_cast<unsigned char>(
+                            ci_ ? static_cast<unsigned char>(pat[it]) : pat[it]
+                        );
+
+                skip_[c] = m - it - 1; 
+            }
+        }
+};
 std::string to_lower_case(std::string text){
     for(char& ch : text) {
         ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
