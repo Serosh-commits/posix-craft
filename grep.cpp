@@ -58,8 +58,6 @@ int main(int argc, char *argv[]){
     while(std::getline(file, line)) {
         ++line_number;
         std::string search_line = line;
-        search_line = to_lower_case(search_line);
-
         if(ignore_case){
             search_line = to_lower_case(search_line);
         }
