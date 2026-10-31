@@ -7,7 +7,6 @@
 #include<array>
 #include<cctype>
 #include<string_view>
-#include<vector>
 #include<cstdint>
 class bmh{
     private:
@@ -73,6 +72,7 @@ class bmh{
         
         std::vector<size_t> find_all(const char* text, size_t n) const {
             std::vector<size_t>results;
+            size_t m = pat_.size();
             size_t offset = 0;
             while(offset + m <= n){
                 size_t pos = find(text + offset, n - offset);
@@ -146,14 +146,14 @@ int main(int argc, char *argv[]){
 
         bool found = search_line.find(pattern) != std::string::npos;
 
-        if(!(invert_match && found) || (invert_match && !found )){
+        if((!invert_match && found) || (invert_match && !found)){
             
             if(show_line_numbers){
-                std::cout<<"line_number"<<line_number<<":";
+                std::cout<<line_number<<":";
             }
 
             std::cout<< line <<"\n";
         }
     }
     return EXIT_SUCCESS;
-
+}
