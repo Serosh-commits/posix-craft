@@ -39,16 +39,16 @@ class bmh{
             if(n < m){
                 return npos;
             }
+            //not sure maybe thinking to setup the allignment the last index should be discarded due to bhm algorithm
             size_t pos = m-1;
 
             while(pos < n){
                 int j = static_cast<int>(m) - 1;
                 size_t k = pos;
-                
+                                
                 while(j >= 0){
                     unsigned char tc = text[k];
                     unsigned char pc = pat_[j];
-
                     if(ci_){
                         tc = std::tolower(tc);
                     }
@@ -70,7 +70,24 @@ class bmh{
 
             return npos;
         }
+        
+        std::vector<size_t> find_all(const char* text, size_t n) const {
+            std::vector<size_t>results;
+            size_t offset = 0;
+            while(offset + m <= n){
+                size_t pos = find(text + offset, n - offset);
+
+                if(pos == npos){
+                    break;
+                }
+
+                results.push_back(offset + pos);
+                offset += pos+m;
+            }
+            return results;
+        }
 };
+
 std::string to_lower_case(std::string text){
     for(char& ch : text) {
         ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
@@ -139,4 +156,4 @@ int main(int argc, char *argv[]){
         }
     }
     return EXIT_SUCCESS;
-}
+
