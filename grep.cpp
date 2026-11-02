@@ -21,7 +21,7 @@ class bmh{
             const int m = static_cast<int>(pat_.size());
             for(int it = 0;it < m-1; ++it){
                 unsigned char c = static_cast<unsigned char>(
-                            ci_ ? static_cast<unsigned char>(pat[it]) : pat[it]
+                            ci_ ? std::tolower(static_cast<unsigned char>(pat[it])) : pat[it]
                         );
 
                 skip_[c] = m - it - 1; 
@@ -48,12 +48,10 @@ class bmh{
                 while(j >= 0){
                     unsigned char tc = text[k];
                     unsigned char pc = pat_[j];
-                    if(ci_){
-                        tc = std::tolower(tc);
-                    }
-                    if(tc != pc){
-                        break;
-                    }
+
+                    if(ci_) tc = std::tolower(tc);
+                    
+                    if(tc != pc) break;
                     --j;
                     --k;
                 }
@@ -77,9 +75,7 @@ class bmh{
             while(offset + m <= n){
                 size_t pos = find(text + offset, n - offset);
 
-                if(pos == npos){
-                    break;
-                }
+                if(pos == npos) break;
 
                 results.push_back(offset + pos);
                 offset += pos+m;
@@ -119,7 +115,7 @@ int main(int argc, char *argv[]){
     }
     
     if(argc - arg_index != 2){
-        std::cerr<<"Usage : ./grep [-n] [-r] <pattern> <input file name>\n";
+        std::cerr<<"Usage : ./grep [-n] [-r] [-i] <pattern> <input file name>\n";
         return EXIT_FAILURE;
     }
 
